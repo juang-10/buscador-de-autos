@@ -166,10 +166,10 @@ function filtrarTransmision(auto) {
 }
 
 function filtrarColor(auto) {
-    const { gola } = datosBusqueda;
+    const { color } = datosBusqueda;
     
-    if( gola ) {
-        return auto.gola === gola;
+    if( color ) {
+        return auto.color === color;
     }
     return auto;
 }
