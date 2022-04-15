@@ -23,7 +23,7 @@ const datosBusqueda = {
 
 // Eventos
 document.addEventListener('DOMContentLoaded', () => {
-    mostrarAutos(); //Muestra los comentarios al cargar
+    mostrarAutos(autos); //Muestra los comentarios al cargar
     
     // Llena las opciones de años
     llenarSelect();
@@ -46,31 +46,32 @@ year.addEventListener('change', e => {
 
 minimo.addEventListener('change', e => {
     datosBusqueda.minimo = e.target.value;
-    console.log(datosBusqueda);
+    filtrarAuto();
 })
 
 maximo.addEventListener('change', e => {
     datosBusqueda.maximo = e.target.value;
-    console.log(datosBusqueda);
+    filtrarAuto();
 })
 
 puertas.addEventListener('change', e => {
-    datosBusqueda.puertas = e.target.value;
-    console.log(datosBusqueda);
+    datosBusqueda.puertas = parseInt(e.target.value);
+    filtrarAuto();
 })
 
 transmision.addEventListener('change', e => {
     datosBusqueda.transmision = e.target.value;
-    console.log(datosBusqueda);
+    filtrarAuto();
 })
 
 color.addEventListener('change', e => {
     datosBusqueda.color = e.target.value;
-    console.log(datosBusqueda);
+    filtrarAuto();
 })
 
 // Funciones
-function mostrarAutos() {
+function mostrarAutos(autos) {
+    limpiarHTML(); // Elimina el HTML previo
     autos.forEach(auto => {
 
         const { marca, modelo, year, puertas, transmision, precio, color  } = auto;
@@ -86,6 +87,13 @@ function mostrarAutos() {
     });
 }
 
+// Limpiar HTML
+function limpiarHTML() {
+    while (resultado.firstChild) {
+        resultado.removeChild(resultado.firstChild);
+    }
+}
+
 // Genera los años del select
 function llenarSelect() {
     for( let i = max; i >= min; i-- ){
@@ -98,8 +106,10 @@ function llenarSelect() {
 
 // Funcion que filtra en base a la búsqueda
 function filtrarAuto() {
-    const resultado = autos.filter(filtrarMarca).filter(filtrarYear)
-    console.log(resultado);
+    const resultado = autos.filter(filtrarMarca).filter(filtrarYear).filter(filtrarMinimo).filter(filtrarMaximo).filter(filtrarPuertas).filter(filtrarColor).filter(filtrarTransmision);
+    // console.log(resultado);
+
+    mostrarAutos(resultado)
 }
 
 function filtrarMarca(auto) {
@@ -112,9 +122,54 @@ function filtrarMarca(auto) {
 
 function filtrarYear(auto) {
     const { year } = datosBusqueda;
-    
+
     if( year ) {
         return auto.year === year;
+    }
+    return auto;
+}
+
+function filtrarMinimo(auto) {
+    const { minimo } = datosBusqueda;
+    
+    if( minimo ) {
+        return auto.precio >= minimo;
+    }
+    return auto;
+}
+
+function filtrarMaximo(auto) {
+    const { maximo } = datosBusqueda;
+    
+    if( maximo ) {
+        return auto.precio <= maximo;
+    }
+    return auto;
+}
+
+function filtrarPuertas(auto) {
+    const { puertas } = datosBusqueda;
+    
+    if( puertas ) {
+        return auto.puertas === puertas;
+    }
+    return auto;
+}
+
+function filtrarTransmision(auto) {
+    const { transmision } = datosBusqueda;
+    
+    if( transmision ) {
+        return auto.transmision === transmision;
+    }
+    return auto;
+}
+
+function filtrarColor(auto) {
+    const { gola } = datosBusqueda;
+    
+    if( gola ) {
+        return auto.gola === gola;
     }
     return auto;
 }
